@@ -21,6 +21,9 @@ int main(int argc, char **argv)
     char *next_ip = argv[1];
     char *next_port = argv[2];
 
+    int next_socket;       //create a socket for next computer
+    int connection_status; // status for connection with next computer
+
     printf("Next computer ip is %s\n", next_ip);
     printf("Next computer port is %s\n", next_port);
 
@@ -43,23 +46,11 @@ int main(int argc, char **argv)
     server_address.sin_port = htons(9002);
     server_address.sin_addr.s_addr = INADDR_ANY;
 
-    //create a socket for next computer
-    int next_socket;
-    next_socket = socket(AF_INET, SOCK_STREAM, 0);
-
     //define next address
     struct sockaddr_in next_address;
     next_address.sin_family = AF_INET;
-    next_address.sin_port = htons(next_port);
+    next_address.sin_port = htons(atoi(next_port));
     next_address.sin_addr.s_addr = inet_addr(next_ip);
-
-    // connect to the next computer
-    int connection_status = connect(next_socket, (struct sockaddr *)&next_address, sizeof(next_address));
-    if (connection_status == -1)
-    {
-        perror("Error conecting to the next computer socket");
-        exit(1);
-    }
 
     //bind the socket to our specified IP and port
     if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)))
@@ -94,16 +85,28 @@ int main(int argc, char **argv)
         }
         printf("I got: %s\n", client_message);
 
+        close(client_socket);
+
+        next_socket = socket(AF_INET, SOCK_STREAM, 0);
+
+        // connect to the next computer
+        connection_status = connect(next_socket, (struct sockaddr *)&next_address, sizeof(next_address));
+        if (connection_status == -1)
+        {
+            perror("Error conecting to the next computer socket");
+            exit(1);
+        }
+
         if (write(next_socket, client_message, MAX) == -1)
         {
             perror("Error writing to the next socket");
             exit(1);
         }
+
+        close(next_socket);
     }
 
-    printf("end of tcp.");
-
-    ////// END OF TCP ///////////
+    printf("end of tcp."); // End of tcp
 
     // close(server_socket);
     return 0;
