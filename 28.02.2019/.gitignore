@@ -3,3 +3,4 @@
 
 # Unignore all with extensions
 !*.*
+*.log

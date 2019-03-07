@@ -94,9 +94,9 @@ int main(int argc, char **argv)
         }
         printf("I got: %s\n", client_message);
 
-        if (write(client_socket, greeting_message, MAX) == -1)
+        if (write(next_socket, client_message, MAX) == -1)
         {
-            perror("Error writing to the client socket");
+            perror("Error writing to the next socket");
             exit(1);
         }
     }
