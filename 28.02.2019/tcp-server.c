@@ -25,8 +25,7 @@ int main(int argc, char **argv)
     printf("Next computer port is %s\n", next_port);
 
     //what the server has to say
-    char server_message[256] = "Hey. This is server speaking."; //for udp connections
-    char buff[MAX] = "elo elo 3 2 0";                           //for tcp connections
+    char greeting_message[MAX] = "elo elo 3 2 0"; //for tcp connections
     char client_message[MAX];
 
     //create the server socket
@@ -44,11 +43,23 @@ int main(int argc, char **argv)
     server_address.sin_port = htons(9002);
     server_address.sin_addr.s_addr = INADDR_ANY;
 
-    //define server address
+    //create a socket for next computer
+    int next_socket;
+    next_socket = socket(AF_INET, SOCK_STREAM, 0);
+
+    //define next address
     struct sockaddr_in next_address;
     next_address.sin_family = AF_INET;
-    next_address.sin_port = htons(9002);
-    next_address.sin_addr.s_addr = INADDR_ANY;
+    next_address.sin_port = htons(next_port);
+    next_address.sin_addr.s_addr = inet_addr(next_ip);
+
+    // connect to the next computer
+    int connection_status = connect(next_socket, (struct sockaddr *)&next_address, sizeof(next_address));
+    if (connection_status == -1)
+    {
+        perror("Error conecting to the next computer socket");
+        exit(1);
+    }
 
     //bind the socket to our specified IP and port
     if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)))
@@ -69,7 +80,7 @@ int main(int argc, char **argv)
             exit(1);
         }
 
-        if (write(client_socket, buff, MAX) == -1)
+        if (write(client_socket, greeting_message, MAX) == -1)
         {
             perror("Error writing to the client socket");
             exit(1);
@@ -81,7 +92,13 @@ int main(int argc, char **argv)
             perror("Error while reading socket");
             exit(1);
         }
-        printf("Otrzymano: %s\n", client_message);
+        printf("I got: %s\n", client_message);
+
+        if (write(client_socket, greeting_message, MAX) == -1)
+        {
+            perror("Error writing to the client socket");
+            exit(1);
+        }
     }
 
     printf("end of tcp.");
