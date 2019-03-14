@@ -10,6 +10,7 @@
 #include <arpa/inet.h>
 
 #define MAX 512
+#define PORT 9200
 
 // RUNNING: ./tcp-server <next_address> <next_port>
 
@@ -18,6 +19,7 @@ int main(int argc, char **argv)
     if (argc < 3)
     {
         printf("Insufficient number of arguments.\nUse %s <next_address> <next_port>\n", argv[0]);
+        // you can add additional argument to specify this server port number (if you don't want the default one)
         exit(1);
     }
 
@@ -26,12 +28,18 @@ int main(int argc, char **argv)
 
     int next_socket;       //create a socket for next computer
     int connection_status; // status for connection with next computer
+    int server_port = PORT;
+
+    if (argc > 3)
+    {
+        server_port = atoi(argv[3]);
+    }
 
     printf("Next computer ip is %s\n", next_ip);
     printf("Next computer port is %s\n", next_port);
 
     //what the server has to say
-    char greeting_message[MAX] = "elo elo 3 2 0"; //for tcp connections
+    char greeting_message[MAX] = "You connected to the server socket...\n"; //for tcp connections
     char client_message[MAX];
 
     //create the server socket
@@ -46,7 +54,7 @@ int main(int argc, char **argv)
     //define server address
     struct sockaddr_in server_address;
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(9002);
+    server_address.sin_port = htons(server_port);
     server_address.sin_addr.s_addr = INADDR_ANY;
 
     //define next address
@@ -54,6 +62,8 @@ int main(int argc, char **argv)
     next_address.sin_family = AF_INET;
     next_address.sin_port = htons(atoi(next_port));
     next_address.sin_addr.s_addr = inet_addr(next_ip);
+
+    printf("%d\n", inet_addr(next_ip));
 
     //bind the socket to our specified IP and port
     if (bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address)))
@@ -96,7 +106,7 @@ int main(int argc, char **argv)
         connection_status = connect(next_socket, (struct sockaddr *)&next_address, sizeof(next_address));
         if (connection_status == -1)
         {
-            perror("Error conecting to the next computer socket");
+            perror("Error conecting to the next computer socket. Make sure you use the numeric IP representation.");
             exit(1);
         }
 
