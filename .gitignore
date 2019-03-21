@@ -1,2 +1,3 @@
 # Additional computer/workspace specific files
 .vscode
+.DS_Store
