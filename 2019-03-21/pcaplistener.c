@@ -61,13 +61,7 @@ const static char *etype(unsigned int ethertype) {
 }
 
 void cleanup() {
-  printf("
-    \n ipCounter: %d
-    \n arpCounter: %d
-    \n tcpCounter: %d
-    \n udpCounter: %d
-    \n otherCounter: %d
-    \n", ipCounter, arpCounter, tcpCounter, udpCounter, otherCounter);
+  printf("\n ipCounter: %d\n arpCounter: %d\n tcpCounter: %d\n udpCounter: %d\n otherCounter: %d\n", ipCounter, arpCounter, tcpCounter, udpCounter, otherCounter);
   pcap_close(handle);
   free(errbuf);
 }
