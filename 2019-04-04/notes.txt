@@ -1,0 +1,7 @@
+protokoly routingu dynamicznego maja wypelnic tablice routingu (taki jest ich cel)
+routing statyczny polega na tym ze siada czlowiek i wszystko wpisuje
+
+protokol RIP
+- kazdy router co 30 sekund bierze swoja tablice routingu i wysyla ja interfejsami do sasiednich routerow
+- kolejny router sprawdza czy tam sa jakies sieci w ktorej on nie ma wpisow w tablicy routingu
+- jesli takie sa to dodajemy je do rablicy routingu ustawiajac brame na taki adres od ktorego otrzymalismy komunikat
