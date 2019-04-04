@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2019 Michal Kalewski <mkalewski at cs.put.poznan.pl>
  *
- * Compilation:  gcc -Wall ./ethrecv.c -o ./ethrecv
- * Usage:        ./ethrecv INTERFACE
+ * Compilation:  gcc -Wall ./routing.c -o ./routing
+ * Usage:        ./routing INTERFACE
  * NOTE:         This program requires root privileges.
  *
  * Bug reports:  https://gitlab.cs.put.poznan.pl/mkalewski/ps-2019/issues
