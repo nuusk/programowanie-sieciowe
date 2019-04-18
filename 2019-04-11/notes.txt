@@ -1,0 +1,6 @@
+specjalne gniazda komunikacyjne PF
+procesy wymieniaja sie komunikatami poprzez gniazda PF_NETLINK
+
+to co jest wymieniane pomiedzy jadrem a procesem to strumien struktur.
+jeden komunikat to poskladane struktury. jedna wiadomosc moze zaierac wiele takich komunikatow. 
+
